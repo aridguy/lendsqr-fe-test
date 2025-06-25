@@ -192,9 +192,6 @@
   }
 } */
 
-
-
-
 .dashboard-layout {
   .navbar {
     display: flex;
@@ -384,3 +381,4 @@
     z-index: 1040;
   }
 }
+/* Custom collapsed navbar behavior for mobile end here */
