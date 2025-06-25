@@ -1,36 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import DashboardLayout from '../components/DashboardLayout'
-// import Sidebar from '../components/Sidebar';
-// import Navbar from '../components/Navbar';
-
-interface User {
-  _id: string
-  firstName: string
-  lastName: string
-  email: string
-}
+import { fetchUsers } from '../services/api'; // adjust the path as needed
 
 function Dashboard () {
-  const [users, setUsers] = useState<User[]>([]) // 👈 tell TypeScript the type
-
-  useEffect(() => {
-    fetch('https://raw.githubusercontent.com/aridguy/users/main/userData.json')
-      .then(res => res.json())
+const [users, setUsers] = useState([]);
+ useEffect(() => {
+    fetchUsers()
       .then(data => setUsers(data))
-      .catch(err => console.log(err))
-  }, [])
+      .catch(err => console.log(err));
+  }, []);
 
   return (
     <div>
       <DashboardLayout>
-        {users.slice(1, 6).map(user => (
-          <div key={user._id}>
-            <h3>
-              {user.firstName} {user.lastName}
-            </h3>
-            <p>Email: {user.email}</p>
-          </div>
-        ))}
+       <div>
+      <h2>User List</h2>
+      {users.slice(0,6).map((user: any, index) => (
+        <div key={index}>
+          <p>{user.maritalStatus}</p>
+          <p>{user.email}</p>
+        </div>
+      ))}
+    </div>
       </DashboardLayout>
     </div>
   )

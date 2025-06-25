@@ -2,9 +2,11 @@
 import React from 'react'
 import HeroImage from '../Asset/home_img.png'
 import Logo from '../Asset/logo.svg'
+import { useNavigate } from 'react-router-dom'
 // import './Login.scss';
 
 const Login = () => {
+  const Navigate = useNavigate()
   return (
     <div className='login-container container-fluid'>
       <div className='row min-vh-100'>
@@ -48,7 +50,11 @@ const Login = () => {
                   FORGOT PASSWORD?
                 </a>
               </div>
-              <button type='submit' className='btn btn-primary w-100'>
+              <button
+                onClick={() => Navigate('/dashboard')}
+                type='submit'
+                className='btn btn-primary w-100'
+              >
                 LOG IN
               </button>
             </form>
