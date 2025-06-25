@@ -30,7 +30,7 @@ const DashboardLayout = ({ children }) => {
         <div className='container-fluid d-flex justify-content-between align-items-center'>
           <div className='d-flex align-items-center gap-3'>
             <FaBars className='menu-toggle me-3' onClick={toggleSidebar} />
-            <img src={Logo} alt='logo-here' className='me-2' />
+            <img src={Logo} alt='logo-here' className='me-2 display-6' />
 
             {/* Bootstrap Hamburger Toggler */}
             <button

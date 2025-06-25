@@ -1,3 +1,11 @@
+.black{
+  color: rgb(0, 0, 0);
+}
+
+.cursor{
+  cursor: pointer;
+}
+
 .login-container {
   .left-pane {
     background-color: #ffffff;
@@ -211,8 +219,8 @@
       gap: 1rem;
 
       img{
-        width: 110px;
-        margin-left: 3em;
+        width: 90px;
+        margin-left: 34em;
         /* height: 40px; */
         /* object-fit: cover; */
       }
@@ -341,7 +349,7 @@
   .main-content {
     flex-grow: 1;
     padding: 2rem;
-    background-color: #f8f9fa;
+    background-color: #ffffff; /* this background applies to the dashboard background color */
     min-height: 100vh;
   }
 }
@@ -382,3 +390,59 @@
   }
 }
 /* Custom collapsed navbar behavior for mobile end here */
+
+/* .total-users{
+  
+} */
+
+.user-table-section {
+  padding: 1rem;
+
+  .table {
+    th,
+    td {
+      vertical-align: middle;
+    }
+
+    .status-badge {
+      padding: 0.4em 0.75em;
+      font-size: 0.75rem;
+      border-radius: 20px;
+      font-weight: 500;
+      text-transform: capitalize;
+
+      &.inactive {
+        background-color: #e0e0e0;
+        color: #555;
+      }
+
+      &.pending {
+        background-color: #fff4e5;
+        color: #b36b00;
+      }
+
+      &.active {
+        background-color: #e6ffed;
+        color: #2e7d32;
+      }
+
+      &.blacklisted {
+        background-color: #ffe5e5;
+        color: #d32f2f;
+      }
+    }
+  }
+
+  .btn-icon {
+    background: none;
+    border: none;
+    color: #6c757d;
+    font-size: 1.25rem;
+    padding: 0;
+
+    &:hover {
+      color: #000000;
+    }
+  }
+}
+
