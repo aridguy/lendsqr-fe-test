@@ -500,3 +500,11 @@
   }
 }
 
+.filterUi{
+  width: 25%;
+  position: absolute;
+  top: 26em;
+ 
+  z-index: 1000;
+}
+

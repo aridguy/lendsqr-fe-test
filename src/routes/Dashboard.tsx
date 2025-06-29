@@ -20,182 +20,362 @@ interface UserDatas {
 }
 
 function Dashboard () {
-  const [dashboardUi, setDashboardUi] = useState(true)
   const [users, setUsers] = useState<UserDatas[]>([])
+  const [filteredUsers, setFilteredUsers] = useState<UserDatas[]>([])
+  const [filterScreen, setFilterScreen] = useState(false)
   const [openMore, setOpenMore] = useState(false)
 
-  // Pagination states
+  // Pagination
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
 
+  // Filter inputs
+  const [filters, setFilters] = useState({
+    organization: '',
+    username: '',
+    email: '',
+    phone: '',
+    date: '',
+    status: ''
+  })
+
   useEffect(() => {
     fetchUsers()
-      .then(data => setUsers(data))
+      .then(data => {
+        setUsers(data)
+        setFilteredUsers(data)
+      })
       .catch(err => console.log(err))
-    setDashboardUi(true)
   }, [])
 
-  // Paginate users
-  const totalItems = users.length
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const paginatedUsers = users.slice(startIndex, endIndex)
+  // Apply filters
+  const applyFilters = (e: React.FormEvent) => {
+    e.preventDefault()
+    let filtered = [...users]
 
-  // Stats
+    if (filters.organization.trim()) {
+      filtered = filtered.filter(user =>
+        'lendsqr'.toLowerCase().includes(filters.organization.toLowerCase())
+      )
+    }
+
+    if (filters.username.trim()) {
+      filtered = filtered.filter(user =>
+        user.username.toLowerCase().includes(filters.username.toLowerCase())
+      )
+    }
+
+    if (filters.email.trim()) {
+      filtered = filtered.filter(user =>
+        user.email.toLowerCase().includes(filters.email.toLowerCase())
+      )
+    }
+
+    if (filters.phone.trim()) {
+      filtered = filtered.filter(user => user.phone.includes(filters.phone))
+    }
+
+    if (filters.date) {
+      filtered = filtered.filter(
+        user =>
+          new Date(user.createdAt).toLocaleDateString() ===
+          new Date(filters.date).toLocaleDateString()
+      )
+    }
+
+    if (filters.status) {
+      filtered = filtered.filter(user => user.status === filters.status)
+    }
+
+    setFilteredUsers(filtered)
+    setCurrentPage(1)
+  }
+
+  const resetFilters = () => {
+    setFilters({
+      organization: '',
+      username: '',
+      email: '',
+      phone: '',
+      date: '',
+      status: ''
+    })
+    setFilteredUsers(users)
+  }
+
+  const totalItems = filteredUsers.length
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const paginatedUsers = filteredUsers.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  )
+
   const activeUsersCount = users.filter(user => user.status === 'Active').length
   const usersWithLoanCount = users.filter(user => user.hasLoan).length
   const usersWithSavingsCount = users.filter(user => user.hasSavings).length
 
   return (
-    <div>
-      <DashboardLayout>
-        {dashboardUi && (
-          <div className='container total-users mt-4'>
-            <div className='row mb-3 title-total-users'>
-              <div className='col-12'>
-                <h4>Users</h4>
-              </div>
-            </div>
-            <div className='row total-users-row g-3'>
-              <div className='col-12 col-md-3'>
-                <div className='totalBox p-4 bg-white rounded shadow-sm text-start'>
-                  <img src={UsersIcon} alt='users icon' className='mb-2' />
-                  <br />
-                  <small className='text-uppercase fw-bold'>Users</small>
-                  <h3 className='totalCount mt-2'>{users.length}</h3>
-                </div>
-              </div>
-              <div className='col-12 col-md-3'>
-                <div className='totalBox p-4 bg-white rounded shadow-sm'>
-                  <img src={ActiveUsers} alt='users icon' className='mb-2' />
-                  <br />
-                  <small className='text-uppercase fw-bold'>Active users</small>
-                  <h3 className='totalCount mt-2'>{activeUsersCount}</h3>
-                </div>
-              </div>
-              <div className='col-12 col-md-3'>
-                <div className='totalBox p-4 bg-white rounded shadow-sm'>
-                  <img src={UsersWithLoan} alt='users icon' className='mb-2' />
-                  <br />
-                  <small className='text-uppercase fw-bold'>
-                    users with loan
-                  </small>
-                  <h3 className='totalCount mt-2'>{usersWithLoanCount}</h3>
-                </div>
-              </div>
-              <div className='col-12 col-md-3'>
-                <div className='totalBox p-4 bg-white rounded shadow-sm'>
-                  <img
-                    src={UsersWithOutLoan}
-                    alt='users icon'
-                    className='mb-2'
-                  />
-                  <br />
-                  <small className='text-uppercase fw-bold'>
-                    users with savings
-                  </small>
-                  <h3 className='totalCount mt-2'>{usersWithSavingsCount}</h3>
-                </div>
-              </div>
+    <DashboardLayout>
+      <div className='container mt-4'>
+        <div className='row mb-3'>
+          <div className='col-12'>
+            <h4>Users</h4>
+          </div>
+        </div>
+
+        <div className='row g-3'>
+          <div className='col-md-3'>
+            <div className='p-4 bg-white rounded shadow-sm text-start'>
+              <img src={UsersIcon} alt='users' className='mb-2' /> <br />
+              <small className='text-uppercase fw-bold'>Users</small>
+              <h3>{users.length}</h3>
             </div>
           </div>
-        )}
+          <div className='col-md-3'>
+            <div className='p-4 bg-white rounded shadow-sm'>
+              <img src={ActiveUsers} alt='active' className='mb-2' />
+              <br />
+              <small className='text-uppercase fw-bold'>Active users</small>
+              <h3>{activeUsersCount}</h3>
+            </div>
+          </div>
+          <div className='col-md-3'>
+            <div className='p-4 bg-white rounded shadow-sm'>
+              <img src={UsersWithLoan} alt='loan' className='mb-2' />
+              <br />
+              <small className='text-uppercase fw-bold'>Users with loan</small>
+              <h3>{usersWithLoanCount}</h3>
+            </div>
+          </div>
+          <div className='col-md-3'>
+            <div className='p-4 bg-white rounded shadow-sm'>
+              <img src={UsersWithOutLoan} alt='savings' className='mb-2' />
+              <br />
+              <small className='text-uppercase fw-bold'>
+                Users with savings
+              </small>
+              <h3>{usersWithSavingsCount}</h3>
+            </div>
+          </div>
+        </div>
 
-        <div className='container-fluid px-3'>
-          <section className='user-table-section'>
-            <div className='table-responsive'>
-              <table className='table table-hover align-middle text-nowrap'>
-                <thead className='table-light'>
-                  <tr>
-                    <th>ORGANIZATION</th>
-                    <th>USERNAME</th>
-                    <th>EMAIL</th>
-                    <th>PHONE NUMBER</th>
-                    <th>DATE JOINED</th>
-                    <th>STATUS</th>
-                    <th></th>
+        <div className='mt-4'>
+          <div className='table-responsive'>
+            <table className='table table-hover align-middle'>
+              <thead className='table-light'>
+                <tr>
+                  <th>
+                    ORGANIZATION{' '}
+                    <svg
+                      onClick={() => setFilterScreen(prev => !prev)}
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='16'
+                      height='16'
+                      fill='currentColor'
+                      className='bi bi-filter cursor'
+                      viewBox='0 0 16 16'
+                    >
+                      <path d='M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5' />
+                    </svg>
+                  </th>
+                  <th>
+                    USERNAME{' '}
+                    <svg
+                      onClick={() => setFilterScreen(prev => !prev)}
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='16'
+                      height='16'
+                      fill='currentColor'
+                      className='bi bi-filter cursor'
+                      viewBox='0 0 16 16'
+                    >
+                      <path d='M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5' />
+                    </svg>
+                  </th>
+                  <th>
+                    EMAIL{' '}
+                    <svg
+                      onClick={() => setFilterScreen(prev => !prev)}
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='16'
+                      height='16'
+                      fill='currentColor'
+                      className='bi bi-filter cursor'
+                      viewBox='0 0 16 16'
+                    >
+                      <path d='M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5' />
+                    </svg>
+                  </th>
+                  <th>
+                    PHONE{' '}
+                    <svg
+                      onClick={() => setFilterScreen(prev => !prev)}
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='16'
+                      height='16'
+                      fill='currentColor'
+                      className='bi bi-filter cursor'
+                      viewBox='0 0 16 16'
+                    >
+                      <path d='M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5' />
+                    </svg>
+                  </th>
+                  <th>
+                    DATE{' '}
+                    <svg
+                      onClick={() => setFilterScreen(prev => !prev)}
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='16'
+                      height='16'
+                      fill='currentColor'
+                      className='bi bi-filter cursor'
+                      viewBox='0 0 16 16'
+                    >
+                      <path d='M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5' />
+                    </svg>
+                  </th>
+                  <th>
+                    STATUS{' '}
+                    <svg
+                      onClick={() => setFilterScreen(prev => !prev)}
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='16'
+                      height='16'
+                      fill='currentColor'
+                      className='bi bi-filter cursor'
+                      viewBox='0 0 16 16'
+                    >
+                      <path d='M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5' />
+                    </svg>
+                  </th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedUsers.map((user, index) => (
+                  <tr key={index}>
+                    <td>Lendsqr</td>
+                    <td>{user.username}</td>
+                    <td>{user.email}</td>
+                    <td>{user.phone}</td>
+                    <td>
+                      {new Date(user.createdAt).toLocaleDateString()}{' '}
+                      {new Date(user.createdAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </td>
+                    <td>
+                      <span
+                        className={`badge bg-${
+                          user.status === 'Active'
+                            ? 'success'
+                            : user.status === 'Inactive'
+                            ? 'danger'
+                            : 'warning'
+                        }`}
+                      >
+                        {user.status}
+                      </span>
+                    </td>
+                    <td>
+                      <svg
+                        onClick={() => setOpenMore(!openMore)}
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='16'
+                        height='16'
+                        fill='currentColor'
+                        className='bi bi-three-dots-vertical cursor'
+                        viewBox='0 0 16 16'
+                      >
+                        <path d='M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0' />
+                      </svg>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {paginatedUsers.map((user: UserDatas, index: number) => (
-                    <tr key={index} className='cursor'>
-                      <td>lendsqr</td>
-                      <td>{user.username}</td>
-                      <td className='text-break'>{user.email}</td>
-                      <td>{user.phone}</td>
-                      <td>
-                        {user.createdAt
-                          ? new Date(user.createdAt).toLocaleString(undefined, {
-                              year: 'numeric',
-                              month: 'short',
-                              day: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              hour12: true
-                            })
-                          : 'N/A'}
-                      </td>
-                      <td>
-                        <span
-                          className={`badge status-badge ${user.status.toLowerCase()}`}
-                        >
-                          {user.status}
-                        </span>
-                      </td>
-                      <td>
-                        <svg
-                          onClick={() => setOpenMore(prev => !prev)}
-                          xmlns='http://www.w3.org/2000/svg'
-                          width='16'
-                          height='16'
-                          fill='currentColor'
-                          className='bi bi-three-dots-vertical cursor'
-                          viewBox='0 0 16 16'
-                        >
-                          <path d='M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0' />
-                        </svg>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {openMore && (
+            <div className='popup-menu'>
+              <div className='popup-item cursor'>View Details</div>
+              <div className='popup-item cursor'>Blacklist User</div>
+              <div className='popup-item cursor'>Activate User</div>
             </div>
-          </section>
+          )}
         </div>
 
-        {openMore && (
-          <div className='popup-menu'>
-            <div className='popup-item cursor'>
-              <i className='bi bi-person-dash me-2'></i>
-              <span>View Details</span>
-            </div>
-            <div className='popup-item cursor'>
-              <i className='bi bi-person-dash me-2'></i>
-              <span>Blacklist User</span>
-            </div>
-            <div className='popup-item cursor'>
-              <i className='bi bi-person-check me-2'></i>
-              <span>Activate User</span>
-            </div>
-          </div>
-        )}
+        <div>
+          {filterScreen && (
+            <div className='card p-4 shadow-sm mb-3 filterUi'>
+              <h5 className='fw-bold mb-3'>Filter Users</h5>
+              <form onSubmit={applyFilters}>
+                {[
+                  { label: 'Organization', key: 'organization', type: 'text' },
+                  { label: 'Username', key: 'username', type: 'text' },
+                  { label: 'Email', key: 'email', type: 'email' },
+                  { label: 'Phone Number', key: 'phone', type: 'tel' },
+                  { label: 'Date', key: 'date', type: 'date' }
+                ].map(({ label, key, type }) => (
+                  <div key={key} className='mb-3'>
+                    <label className='form-label'>{label}</label>
+                    <input
+                      title='for filter'
+                      type={type}
+                      className='form-control'
+                      value={filters[key as keyof typeof filters]}
+                      onChange={e =>
+                        setFilters({ ...filters, [key]: e.target.value })
+                      }
+                    />
+                  </div>
+                ))}
 
-        {/* Pagination */}
-        <div className='container-fluid'>
-          <div className='row'>
-            <div className='col-md-12'>
-              <Pagination
-                totalItems={totalItems}
-                itemsPerPage={itemsPerPage}
-                currentPage={currentPage}
-                onItemsPerPageChange={setItemsPerPage}
-                onPageChange={setCurrentPage}
-              />
+                <div className='mb-3'>
+                  <label className='form-label'>Status</label>
+                  <select
+                    defaultValue=''
+                    aria-label='Select status'
+                    className='form-select'
+                    value={filters.status}
+                    onChange={e =>
+                      setFilters({ ...filters, status: e.target.value })
+                    }
+                  >
+                    <option value=''>-- Select Status --</option>
+                    <option value='Active'>Active</option>
+                    <option value='Inactive'>Inactive</option>
+                    <option value='Pending'>Pending</option>
+                  </select>
+                </div>
+
+                <div className='d-flex justify-content-end gap-2'>
+                  <button type='submit' className='btn btn-primary btn-sm'>
+                    Apply Filters
+                  </button>
+                  <button
+                    type='button'
+                    className='btn btn-secondary btn-sm'
+                    onClick={resetFilters}
+                  >
+                    Reset
+                  </button>
+                </div>
+              </form>
             </div>
-          </div>
+          )}
         </div>
-      </DashboardLayout>
-    </div>
+
+        <Pagination
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onItemsPerPageChange={setItemsPerPage}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+    </DashboardLayout>
   )
 }
 
