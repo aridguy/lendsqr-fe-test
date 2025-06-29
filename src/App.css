@@ -2,6 +2,11 @@
   color: rgb(0, 0, 0);
 }
 
+/* $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts"; */
+
+
+/* @import "bootstrap-icons/font/bootstrap-icons"; */
+
 .cursor{
   cursor: pointer;
 }
@@ -442,6 +447,55 @@
 
     &:hover {
       color: #000000;
+    }
+  }
+}
+
+.popup-menu {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 130px;
+  padding: 0.8em;
+  border-radius: 4px;
+  position: absolute;
+  bottom: 7em;
+  right: 1em;
+
+  .popup-item{
+    color: rgb(0, 0, 0);
+  }
+
+  
+}
+
+.pagination-toolbar {
+  font-size: 0.875rem;
+
+  .show-limit-select {
+    width: 70px;
+    padding: 0.25rem 0.5rem;
+  }
+
+  button {
+    min-width: 32px;
+    height: 32px;
+    line-height: 1;
+    padding: 0;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background 0.2s;
+    border: none;
+
+    &:hover:not(:disabled) {
+      background-color: #f1f1f1;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 }
