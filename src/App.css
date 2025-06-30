@@ -1,13 +1,12 @@
-.black{
+.black {
   color: rgb(0, 0, 0);
 }
 
 /* $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts"; */
 
-
 /* @import "bootstrap-icons/font/bootstrap-icons"; */
 
-.cursor{
+.cursor {
   cursor: pointer;
 }
 
@@ -223,7 +222,7 @@
       align-items: center;
       gap: 1rem;
 
-      img{
+      img {
         width: 90px;
         margin-left: 34em;
         /* height: 40px; */
@@ -288,7 +287,7 @@
   }
 
   .sidebar {
-    width: 250px;
+    width: 220px;
     min-height: 100vh;
     background: #fff;
     border-right: 1px solid #eee;
@@ -357,6 +356,13 @@
     background-color: #ffffff; /* this background applies to the dashboard background color */
     min-height: 100vh;
   }
+}
+
+.profile-pics{
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 /* Custom collapsed navbar behavior for mobile */
@@ -464,11 +470,9 @@
   bottom: 7em;
   right: 1em;
 
-  .popup-item{
+  .popup-item {
     color: rgb(0, 0, 0);
   }
-
-  
 }
 
 .pagination-toolbar {
@@ -500,11 +504,30 @@
   }
 }
 
-.filterUi{
-  width: 25%;
+.filterUi {
   position: absolute;
+  width: 25%;
   top: 26em;
- 
   z-index: 1000;
 }
 
+
+/* user details section */
+.userDetailsHeader{
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  border-radius: 3px;
+}
+
+.tab-item {
+  color: #000;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+   color: #0d6efd;
+    text-decoration: underline;
+  }
+}
