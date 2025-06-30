@@ -8,6 +8,8 @@ import UsersWithOutLoan from '../Asset/users-with-savings.png'
 import Pagination from '../components/Pagination'
 import { Star } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+const { unparse } = require('papaparse');
+
 
 // import { log } from 'console'
 
@@ -174,6 +176,78 @@ function Dashboard () {
     }
   }, [navigate])
 
+  const handleExportCSV = () => {
+  if (users.length === 0) return;
+
+  const exportData = users.map(user => ({
+    ID: user._id,
+    Username: user.username,
+    FirstName: user.firstName,
+    LastName: user.lastName,
+    Name: user.name,
+    Email: user.email,
+    Phone: user.phone,
+    Company: user.company,
+    Organization: user.organization,
+    Status: user.status,
+    HasLoan: user.hasLoan ? 'Yes' : 'No',
+    HasSavings: user.hasSavings ? 'Yes' : 'No',
+    AccountBalance: user.accountBalance,
+    Balance: user.balance,
+    DateJoined: new Date(user.dateJoined).toLocaleDateString(),
+    CreatedAt: new Date(user.createdAt).toLocaleDateString(),
+    UpdatedAt: user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : '',
+    EmploymentDuration: user.employmentDuration,
+    EmploymentSector: user.employmentSector,
+    EmploymentStatus: user.employmentStatus,
+    MonthlyIncome: user.monthlyIncome,
+    BVN: user.bvn,
+    Gender: user.gender,
+    MaritalStatus: user.maritalStatus || '',
+    ResidenceType: user.residenceType,
+
+    // Education
+    Education_Level: user.education.level,
+    Education_Institution: user.education.institution,
+    GraduationYear: user.education.graduationYear,
+
+    // Family
+    Children: user.familyDetails.children,
+
+    // Socials
+    Twitter: user.socialMedia.twitter,
+    Facebook: user.socialMedia.facebook,
+    Instagram: user.socialMedia.instagram,
+
+    // Guarantor
+    GuarantorFullName: user.guarantor.fullName,
+    GuarantorPhone: user.guarantor.phone,
+    GuarantorEmail: user.guarantor.email,
+    GuarantorAddress: user.guarantor.address,
+    GuarantorRelationship: user.guarantor.relationship,
+
+    // Bank
+    AccountNumber: user.bankDetails.accountNumber,
+    BankName: user.bankDetails.bankName,
+    AccountType: user.bankDetails.accountType,
+
+    // Tier
+    UserTier: user.userTier
+  }));
+
+  const csv = unparse(exportData);
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'users-full-export.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+
   return (
     <DashboardLayout>
       {/* dashboard default UI */}
@@ -183,6 +257,7 @@ function Dashboard () {
             <div className='row mb-3'>
               <div className='col-12'>
                 <h4>Users</h4>
+              <button className="btn btn-primary" onClick={handleExportCSV}>Export Users</button>
               </div>
             </div>
 

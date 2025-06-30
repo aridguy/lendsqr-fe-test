@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
-import HeroImage from '../Asset/home_img.png';
-import Logo from '../Asset/logo.svg';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
+import HeroImage from '../Asset/home_img.png'
+import Logo from '../Asset/logo.svg'
+import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // NEW
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false) // NEW
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!email.trim() || !password.trim()) {
-      alert('Email and password are required');
-      return;
+      Swal.fire('email and password required!')
+      return
     }
 
-    const token = Math.random().toString(36).substring(2);
-    localStorage.setItem('userEmail', email);
-    localStorage.setItem('token', token);
-    navigate('/dashboard');
-  };
+    const token = Math.random().toString(36).substring(2)
+    localStorage.setItem('userEmail', email)
+    localStorage.setItem('token', token)
+    navigate('/dashboard')
+  }
 
   return (
     <div className='login-container container-fluid'>
@@ -52,7 +53,7 @@ const Login = () => {
                   className='form-control'
                   placeholder='Email'
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </div>
               <div className='mb-3 position-relative'>
@@ -61,11 +62,11 @@ const Login = () => {
                   className='form-control'
                   placeholder='Password'
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                 />
                 <span
                   className='show-password'
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() => setShowPassword(prev => !prev)}
                   // style={{ position: 'absolute', right: '10px', top: '10px', cursor: 'pointer', color: '#007bff', fontSize: '14px' }}
                 >
                   {showPassword ? 'HIDE' : 'SHOW'}
@@ -84,7 +85,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
