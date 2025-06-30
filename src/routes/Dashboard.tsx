@@ -7,6 +7,7 @@ import UsersWithLoan from '../Asset/users-with-loan.png'
 import UsersWithOutLoan from '../Asset/users-with-savings.png'
 import Pagination from '../components/Pagination'
 import { Star } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 // import { log } from 'console'
 
@@ -15,6 +16,7 @@ interface UserDatas {
   email: string
   phone: string
   hasLoan: boolean
+  company: string
   hasSavings: boolean
   createdAt: string
   dateJoined: string
@@ -162,6 +164,15 @@ function Dashboard () {
   const usersWithLoanCount = users.filter(user => user.hasLoan).length
   const usersWithSavingsCount = users.filter(user => user.hasSavings).length
   const [selectedUser, setSelectedUser] = useState<UserDatas | null>(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      // If no token, redirect to login
+      navigate('/')
+    }
+  }, [navigate])
 
   return (
     <DashboardLayout>
@@ -308,7 +319,7 @@ function Dashboard () {
                   <tbody>
                     {paginatedUsers.map((user, index) => (
                       <tr key={index}>
-                        <td>Lendsqr</td>
+                        <td>{user.company}</td>
                         <td>{user.username}</td>
                         <td>{user.email}</td>
                         <td>{user.phone}</td>
@@ -474,7 +485,7 @@ function Dashboard () {
                     viewBox='0 0 16 16'
                   >
                     <path
-                      fill-rule='evenodd'
+                      fillRule='evenodd'
                       d='M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8'
                     />
                   </svg>{' '}

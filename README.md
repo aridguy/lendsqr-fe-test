@@ -1,5 +1,45 @@
 # Getting Started with Create React App
 
+📁 Project Architecture (LENDSQR-like React + TypeScript)
+
+
+LENDSQR/
+├── node_modules/                  # Node dependencies
+├── public/                        # Static public assets (favicon, index.html)
+├── src/                           # All application source code
+│
+│   ├── Asset/                     # Static assets used throughout the app
+│   │   ├── active-users.png
+│   │   ├── home_img.png
+│   │   ├── logo.svg
+│   │   └── ... (other image assets)
+│
+│   ├── components/                # Reusable UI components
+│   │   ├── DashboardLayout.jsx    # Layout wrapper for dashboard views
+│   │   ├── Navbar.jsx             # Top navigation bar component
+│   │   ├── Pagination.jsx         # Reusable pagination component
+│   │   ├── PrivateRoute.jsx       # Protected route logic (auth guard) reusable
+│   │   
+│
+│   ├── routes/                    # Route-based pages/views
+│   │   ├── Dashboard.tsx          # Dashboard page after login
+│   │   ├── Login.tsx              # Login page
+│   │   └── NoPage.tsx             # 404 Page not found
+│
+│   ├── services/                  # API service calls (Axios/fetch setup)
+│   │   └── api.tsx                # Central API configuration file
+│
+│   ├── App.tsx                    # Root app component (holds routing layout)
+│   ├── App.css                    # Global styles
+│   ├── index.tsx                  # React app entry point
+│   ├── index.css                  # Base CSS (used in index.tsx)
+│   ├── react-app-env.d.ts         # TypeScript environment declarations
+│   └── logo.svg                   # App logo (used in multiple places)
+│
+├── package.json                   # Project dependencies and scripts
+└── tsconfig.json                  # TypeScript configuration
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -39,8 +79,4 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).

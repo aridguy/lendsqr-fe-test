@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '../Asset/logo.svg'
 import {
   FaBriefcase,
@@ -14,6 +14,8 @@ import {
   FaBell,
   FaSearch
 } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 // import './DashboardLayout.scss';
 
 const DashboardLayout = ({ children }) => {
@@ -21,6 +23,38 @@ const DashboardLayout = ({ children }) => {
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed)
+  }
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      // If no token, redirect to login
+      navigate('/')
+    }
+  }, [navigate])
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, logout'
+    }).then(result => {
+      if (result.isConfirmed) {
+        // Clear token and navigate
+        localStorage.removeItem('token')
+        Swal.fire(
+          'Logged Out',
+          'You have been logged out successfully.',
+          'success'
+        )
+        navigate('/')
+      }
+    })
   }
 
   return (
@@ -69,6 +103,12 @@ const DashboardLayout = ({ children }) => {
                   className='avatar rounded-circle'
                   style={{ width: '35px', height: '35px', objectFit: 'cover' }}
                 />
+                <span
+                  className='username fw-semibold cursor'
+                  onClick={handleLogout}
+                >
+                  Logout
+                </span>
               </div>
             </div>
           </div>
