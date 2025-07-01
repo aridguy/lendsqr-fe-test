@@ -176,6 +176,8 @@ function Dashboard () {
     }
   }, [navigate])
 
+
+  // export data (records) as CSV file
   const handleExportCSV = () => {
   if (users.length === 0) return;
 
